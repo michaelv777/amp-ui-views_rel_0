@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+   
+   <title>Email</title>
+
+   <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+   <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+   
+</h:head>
+  <h:body id="pPageBody">  
+  <f:view contentType="text/html">
+   
+   <h:form id="relf3">
+	   <p:growl id="pMessages" showDetail="true"/>
+	   	
+    	 <p:panel id="pEmailPanel" header="Send Email" style="width:100%;height:500px;">
+    	 	<h:panelGrid columns="2" style="width: 100%;display:block;" cellpadding="5">
+    	 		
+    	 		
+						<h:outputText value="To:" />
+						<p:inputText id="email" required="true" label="email" size="40" requiredMessage="Please enter your email address."
+									 validatorMessage="Invalid email format" value="#{emailHandlerBean.email}">
+				
+							<p:ajax event="blur" update=":relf3:pEmailPanel"/>
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>
+						<p:watermark for="email" value="Email Address *" />
+						<p:message for="email" />
+					
+    	 	
+						<h:outputText value="Subject:" />
+						<p:inputText id="subject" required="true" label="subject" size="40" value="#{emailHandlerBean.subject}">
+							<p:ajax event="blur" update=":relf3:pEmailPanel"/>
+    					</p:inputText>
+    	 			
+				
+				
+						<h:outputText value="Message:" />
+						<p:inputTextarea value="#{emailHandlerBean.message}" rows="10" cols="40" counter="display" maxlength="500" counterTemplate="{0} characters remaining." autoResize="false">
+    						<p:ajax event="blur" update=":relf3:pEmailPanel"/>
+    					</p:inputTextarea>	
+    			
+						<p:commandButton value="Send" style="margin:20px" action="#{emailHandlerBean.sendEmail}" 
+				    			process="@this" 
+				    			icon="ui-icon-mail-closed"
+				    			update=":relf3:pMessages, :relf3:pEmailPanel"
+				    			onstart="PF('blockUIWidgetSendREmail').block()" 
+							    oncomplete="PF('blockUIWidgetSendREmail').unblock()"/>
+    			
+    					<h:outputText id="display" />
+    					
+		    			<pe:blockUI widgetVar="blockUIWidgetSendREmail" timeout="10000">
+			                	<h:panelGrid columns="2">  
+								        <h:graphicImage library="images" name="download.png"  
+								                        style="margin-right: 12px; vertical-align: middle;"/>
+								        <h:outputText value="Sending Email..." style="white-space: nowrap;"/>  
+								</h:panelGrid>
+						</pe:blockUI>
+						
+					
+    	 	</h:panelGrid>
+    	 </p:panel>
+	</h:form> 
+   </f:view>
+  </h:body>
+ </html>
